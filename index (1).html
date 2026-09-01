@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skill-Based Team Formation</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f7fb;color:#172033}
+header{background:#172033;color:#fff;padding:28px 7%;text-align:center}header h1{margin:0 0 8px;font-size:32px}header p{margin:0;color:#d9e1f2}
+.container{max-width:1100px;margin:28px auto;padding:0 20px}.search{background:#fff;padding:18px;border-radius:16px;box-shadow:0 4px 18px #0001;margin-bottom:22px}
+input{width:100%;padding:14px 16px;border:1px solid #d8deea;border-radius:10px;font-size:16px;outline:none}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}button{border:1px solid #d8deea;background:#fff;border-radius:20px;padding:9px 13px;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:16px}.card{background:#fff;border-radius:16px;padding:20px;box-shadow:0 4px 18px #0001}
+.avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#e9eefc;font-weight:bold;font-size:17px;margin-bottom:12px}
+.card h3{margin:0 0 5px}.class{font-size:14px;color:#667085;margin-bottom:14px}.skills{display:flex;flex-wrap:wrap;gap:7px}
+.skill{background:#eef3ff;padding:6px 9px;border-radius:8px;font-size:13px}.course{font-size:12px;font-weight:bold;margin-bottom:6px;color:#667085}
+#count{color:#667085;margin:15px 0}.empty{text-align:center;padding:40px;background:#fff;border-radius:16px;color:#667085}
+</style>
+</head>
+<body>
+<header>
+<h1>Skill-Based Team Formation</h1>
+<p>Find teammates based on strengths, not just friendships.</p>
+</header>
+<div class="container">
+<div class="search">
+<input id="search" type="text" placeholder="Search by student, course, class, or skill...">
+<div class="filters" id="filters"></div>
+</div>
+<div id="count"></div>
+<div class="grid" id="students"></div>
+</div>
+
+<script>
+const students=[
+{name:"Aarav Mehta",course:"BCA",class:"3rd Sem",skills:["Java","Coding","Problem Solving"]},
+{name:"Diya Nair",course:"BBA",class:"3rd Sem",skills:["Communication","Leadership","Presentation"]},
+{name:"Kabir Khan",course:"BCom",class:"3rd Sem",skills:["Database","SQL","Problem Solving"]},
+{name:"Meera Iyer",course:"BCA",class:"3rd Sem",skills:["Python","Research","Web Development"]},
+{name:"Rohan Das",course:"BBA",class:"3rd Sem",skills:["Marketing","Communication","Creativity"]},
+{name:"Aditi Rao",course:"BCom",class:"3rd Sem",skills:["Research","Presentation","Teamwork"]},
+{name:"Ishaan Kapoor",course:"BCA",class:"3rd Sem",skills:["Python","SQL","Coding"]},
+{name:"Zoya Sheikh",course:"BBA",class:"3rd Sem",skills:["Creativity","Design","Public Speaking"]},
+{name:"Arjun Menon",course:"BCom",class:"3rd Sem",skills:["Database","Excel","Problem Solving"]},
+{name:"Tara Joseph",course:"BCA",class:"3rd Sem",skills:["Java","Web Development","Coding"]},
+{name:"Neil Fernandes",course:"BBA",class:"3rd Sem",skills:["Design","Creativity","Presentation"]},
+{name:"Kavya Bhat",course:"BCom",class:"3rd Sem",skills:["Communication","Leadership","Research"]},
+{name:"Dev Patel",course:"BCA",class:"3rd Sem",skills:["Coding","Java","SQL"]},
+{name:"Sana Mirza",course:"BBA",class:"3rd Sem",skills:["Public Speaking","Teamwork","Communication"]},
+{name:"Vihaan Sethi",course:"BCom",class:"3rd Sem",skills:["Database","SQL"]},
+{name:"Nisha Thomas",course:"BCA",class:"3rd Sem",skills:["Python","Problem Solving","Research"]},
+{name:"Advik Kulkarni",course:"BBA",class:"3rd Sem",skills:["Leadership","Presentation","Teamwork"]},
+{name:"Riya Banerjee",course:"BCom",class:"3rd Sem",skills:["Creativity","Design","Communication"]},
+{name:"Yuvan Krishnan",course:"BCA",class:"3rd Sem",skills:["Web Development","Python","Coding"]},
+{name:"Hiba Rahman",course:"BBA",class:"3rd Sem",skills:["Research","Public Speaking","Presentation"]}
+];
+
+const extraSkills=["Marketing","Excel","Teamwork","HTML/CSS","Event Planning"];
+const allSkills=[...new Set(students.flatMap(s=>s.skills))].sort();
+const filters=document.getElementById("filters"),list=document.getElementById("students"),search=document.getElementById("search"),count=document.getElementById("count");
+
+function initials(n){return n.split(" ").map(x=>x[0]).join("").slice(0,2)}
+function render(q=""){
+ q=q.toLowerCase().trim();
+ const result=students.filter(s=>!q||[s.name,s.course,s.class,...s.skills].join(" ").toLowerCase().includes(q));
+ count.textContent=`Showing ${result.length} of ${students.length} students`;
+ list.innerHTML=result.length?result.map(s=>`
+ <div class="card">
+ <div class="avatar">${initials(s.name)}</div>
+ <div class="course">${s.course}</div>
+ <h3>${s.name}</h3>
+ <div class="class">${s.class}</div>
+ <div class="skills">${s.skills.map(x=>`<span class="skill">${x}</span>`).join("")}</div>
+ </div>`).join(""):`<div class="empty">No students found. Try another skill or course.</div>`;
+}
+allSkills.forEach(skill=>{const b=document.createElement("button");b.textContent=skill;b.onclick=()=>{search.value=skill;render(skill)};filters.appendChild(b)});
+search.addEventListener("input",e=>render(e.target.value));render();
+</script>
+</body>
+</html>
